@@ -1,0 +1,186 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyKNVA – Canevas de cours</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">KNVA</div>
+        <div>
+          <div class="title">Canevas de cours</div>
+          <div class="subtitle">Créer, planifier et imprimer vos canevas</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="btnPrint" class="btn ghost">Imprimer</button>
+        <button id="btnExport" class="btn ghost">Exporter JSON</button>
+        <label class="file-btn">
+          Importer JSON
+          <input id="importFile" type="file" accept="application/json" />
+        </label>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Données</h2>
+
+        <section>
+          <div class="section-title">Module</div>
+          <div class="row">
+            <select id="moduleSelect"></select>
+            <button id="addModule" class="btn">+ Module</button>
+          </div>
+          <div class="row">
+            <button id="editModule" class="btn ghost">Modifier</button>
+          </div>
+          <div id="moduleMeta" class="meta"></div>
+        </section>
+
+        <section>
+          <div class="section-title">Classe</div>
+          <div class="row">
+            <select id="classSelect"></select>
+            <button id="addClass" class="btn">+ Classe</button>
+          </div>
+          <div class="row">
+            <button id="editClass" class="btn ghost">Modifier</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Année</div>
+          <div class="row">
+            <select id="yearSelect"></select>
+            <button id="addYear" class="btn">+ Année</button>
+          </div>
+          <div class="row">
+            <button id="duplicatePrev" class="btn ghost">Dupliquer année précédente</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Canevas</div>
+          <div class="row">
+            <select id="canvasSelect"></select>
+            <button id="newCanvas" class="btn">+ Canevas</button>
+          </div>
+          <div class="row">
+            <button id="deleteCanvas" class="btn ghost danger">Supprimer canevas</button>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="card">
+          <div class="card-header">
+            <h2>En-tête du canevas</h2>
+          </div>
+          <div class="card-body grid-3">
+            <label>
+              Titre
+              <input id="canvasTitle" type="text" placeholder="Ex: Séquence 1 – Systèmes" />
+            </label>
+            <label>
+              Module sélectionné
+              <input id="canvasModule" type="text" disabled />
+            </label>
+            <label>
+              Classe sélectionnée
+              <input id="canvasClass" type="text" disabled />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Dates de cours</h2>
+            <div class="inline">
+              <input id="dateInput" type="date" />
+              <button id="addDate" class="btn">Ajouter date</button>
+            </div>
+          </div>
+          <div id="datesList" class="card-body chips"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Activités</h2>
+            <button id="addActivity" class="btn">+ Activité</button>
+          </div>
+          <div id="activityList" class="card-body"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Planification</h2>
+          </div>
+          <div id="schedule" class="card-body schedule"></div>
+        </section>
+      </main>
+
+      <aside class="panel">
+        <h2>Paramètres</h2>
+
+        <section>
+          <div class="section-title">Durées des journées</div>
+          <div class="grid-2">
+            <label>Matin début <input id="morningStart" type="time" /></label>
+            <label>Matin fin <input id="morningEnd" type="time" /></label>
+            <label>Pause matin <input id="morningBreakTime" type="time" /></label>
+            <label>Durée pause (min) <input id="morningBreakDur" type="number" min="5" step="5" /></label>
+            <label>Après-midi début <input id="afternoonStart" type="time" /></label>
+            <label>Après-midi fin <input id="afternoonEnd" type="time" /></label>
+            <label>Pause ap.-midi <input id="afternoonBreakTime" type="time" /></label>
+            <label>Durée pause (min) <input id="afternoonBreakDur" type="number" min="5" step="5" /></label>
+          </div>
+          <label class="row">
+            <input id="extraHour" type="checkbox" />
+            Ajouter 1h supplémentaire à 16h45
+          </label>
+          <label>Durée de l'heure supplémentaire (min)
+            <input id="extraHourDur" type="number" min="30" step="15" />
+          </label>
+        </section>
+
+        <section>
+          <div class="section-title">Conseil</div>
+          <p class="muted">Les paramètres s'appliquent au canevas en cours. Utilisez l'impression pour partager.</p>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <template id="activityTemplate">
+    <div class="activity">
+      <div class="activity-head">
+        <input class="activity-name" type="text" placeholder="Nom de l'activité" />
+        <div class="duration">
+          <button class="btn small ghost minus">-5</button>
+          <input class="activity-duration" type="number" min="5" step="5" />
+          <button class="btn small ghost plus">+5</button>
+          <span>min</span>
+        </div>
+        <select class="activity-day"></select>
+        <div class="activity-actions">
+          <button class="btn small ghost up">↑</button>
+          <button class="btn small ghost down">↓</button>
+          <button class="btn small ghost danger remove">Supprimer</button>
+        </div>
+      </div>
+      <div class="activity-body">
+        <textarea class="activity-desc" placeholder="Description"></textarea>
+        <textarea class="activity-obj" placeholder="Objectif / intention"></textarea>
+        <textarea class="activity-comment" placeholder="Commentaire après-coup"></textarea>
+      </div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
